@@ -58,7 +58,7 @@ public class ClientTracking {
 
     String hashedUsername = generateHash(usernameProperty);
 
-    Boolean guestFlag = false;
+    boolean guestFlag = false;
     if (usernameProperty.startsWith("libguest")) {
       guestFlag = true;
 
