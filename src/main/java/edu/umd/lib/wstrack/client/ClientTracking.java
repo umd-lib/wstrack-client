@@ -3,7 +3,6 @@ package edu.umd.lib.wstrack.client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,6 +44,8 @@ public class ClientTracking {
   public static void main(String[] args) throws MalformedURLException,
       IOException {
 
+    String serviceUrl = "http://localhost:8080/wstrack-server/track";
+
     boolean debug = System.getProperty("wstrack.debug", "false").equals("true");
 
     if (debug) {
@@ -80,22 +81,19 @@ public class ClientTracking {
      * @Javadoc- Code to submit URL
      */
     try {
-      // Construct data
-      String data = URLEncoder.encode("key1", "UTF-8") + "="
-          + URLEncoder.encode("value1", "UTF-8");
-      data += "&" + URLEncoder.encode("key2", "UTF-8") + "="
-          + URLEncoder.encode("value2", "UTF-8");
 
-      // Send data
-      // URL url = new URL("http://hostname:80/cgi");
-      URL url = new URL("http://" + hostName
-          + ":8888/wstrack-client/wstrackClient/track/" + hostAddress + "/"
-          + hashedUsername + "/" + property);
+      // build tracking url
+      StringBuffer sb = new StringBuffer(serviceUrl);
+      sb.append("/" + URLEncoder.encode("1.1.1.1"));
+      sb.append("/" + "login");
+      sb.append("/" + URLEncoder.encode(hostAddress, "UTF-8"));
+      sb.append("/" + URLEncoder.encode(property));
+      sb.append("/" + guestFlag);
+      sb.append("/" + URLEncoder.encode(hashedUsername));
+
+      // open the connection
+      URL url = new URL(sb.toString());
       URLConnection conn = url.openConnection();
-      conn.setDoOutput(true);
-      OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-      wr.write(data);
-      wr.flush();
 
       // Get the response
       BufferedReader rd = new BufferedReader(new InputStreamReader(
@@ -104,7 +102,7 @@ public class ClientTracking {
       while ((line = rd.readLine()) != null) {
         log.debug("response: " + line);
       }
-      wr.close();
+      // wr.close();
       rd.close();
     } catch (Exception e) {
       log.error("Error in transmission:", e);
