@@ -45,11 +45,15 @@ public class ClientTracking {
   public static void main(String[] args) throws MalformedURLException,
       IOException {
 
-    // debug logging to the console
-    Appender console = new ConsoleAppender(new PatternLayout(
-        "%d [%-5p]: (%c)%n%m%n%n"));
-    Logger.getRootLogger().addAppender(console);
-    Logger.getRootLogger().setLevel(Level.DEBUG);
+    boolean debug = System.getProperty("wstrack.debug", "false").equals("true");
+
+    if (debug) {
+      // debug logging to the console
+      Appender console = new ConsoleAppender(new PatternLayout(
+          "%d [%-5p]: (%c)%n%m%n%n"));
+      Logger.getRootLogger().addAppender(console);
+      Logger.getRootLogger().setLevel(Level.DEBUG);
+    }
 
     String username = "user.name";
     String usernameProperty = System.getProperty(username);
@@ -98,11 +102,12 @@ public class ClientTracking {
           conn.getInputStream()));
       String line;
       while ((line = rd.readLine()) != null) {
-        // Process line...
+        log.debug("response: " + line);
       }
       wr.close();
       rd.close();
     } catch (Exception e) {
+      log.error("Error in transmission:", e);
     }
 
   }
