@@ -3,7 +3,6 @@ package edu.umd.lib.wstrack.client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -58,58 +57,67 @@ public class ClientTracking {
       Logger.getRootLogger().addAppender(new NullAppender());
     }
 
-    // map environment to baseUrl
-    String env = System.getProperty("wstrack.env", "local");
-    String baseUrl = null;
-
-    if (env.equals("prod")) {
-      baseUrl = "http://www.lib.umd.edu/wstrack/track";
-
-    } else if (env.equals("stage")) {
-      baseUrl = "http://wwwstage.lib.umd.edu/wstrack/track";
-
-    } else if (env.equals("dev")) {
-      baseUrl = "http://wwwdev.lib.umd.edu/wstrack/track";
-
-    } else {
-      baseUrl = "http://localhost:8080/wstrack-server/track";
-    }
-    log.debug("base url: " + baseUrl);
-
-    String username = "user.name";
-    String usernameProperty = System.getProperty(username);
-    log.debug("username: " + usernameProperty);
-
-    String nameOS = "os.name";
-    String property = System.getProperty(nameOS);
-    log.debug("The OS Name is :" + property);
-
-    String hostName = InetAddress.getLocalHost().getHostName();
-    log.debug("The hostname is :" + hostName);
-
-    String hostAddress = InetAddress.getLocalHost().getHostAddress();
-    log.debug("The host address is :" + hostAddress);
-
-    String hashedUsername = generateHash(usernameProperty);
-
-    boolean guestFlag = false;
-    if (usernameProperty.startsWith("libguest")) {
-      guestFlag = true;
-
-    }
-    /*
-     * @Javadoc- Code to submit URL
-     */
     try {
+
+      // map environment to baseUrl
+      String env = System.getProperty("wstrack.env", "local");
+      String baseUrl = null;
+
+      if (env.equals("prod")) {
+        baseUrl = "http://www.lib.umd.edu/wstrack/track";
+
+      } else if (env.equals("stage")) {
+        baseUrl = "http://wwwstage.lib.umd.edu/wstrack/track";
+
+      } else if (env.equals("dev")) {
+        baseUrl = "http://wwwdev.lib.umd.edu/wstrack/track";
+
+      } else {
+        baseUrl = "http://localhost:8080/wstrack-server/track";
+      }
+      log.debug("base url: " + baseUrl);
+
+      // gather params
+      String username = System.getProperty("wstrack.username");
+      if (username == null) {
+        throw new Exception("wstrack.username property is required");
+      }
+      log.debug("username: " + username);
+
+      String hostname = System.getProperty("wstrack.hostname");
+      if (hostname == null) {
+        throw new Exception("wstrack.hostname property is required");
+      }
+      log.debug("hostname: " + hostname);
+
+      String status = System.getProperty("wstrack.status");
+      if (status == null) {
+        throw new Exception("wstrack.status property is required");
+      }
+      log.debug("status: " + username);
+
+      String ip = System.getProperty("wstrack.ip");
+      if (ip == null) {
+        throw new Exception("wstrack.ip property is required");
+      }
+      log.debug("username: " + ip);
+
+      String os = System.getProperty("wstrack.os");
+      if (os == null) {
+        throw new Exception("wstrack.os property is required");
+      }
+      log.debug("os: " + os);
+
+      boolean guestFlag = username.startsWith("libguest");
 
       // build tracking url
       StringBuffer sb = new StringBuffer(baseUrl);
-      sb.append("/" + URLEncoder.encode("1.1.1.1"));
-      sb.append("/" + "login");
-      sb.append("/" + URLEncoder.encode(hostAddress, "UTF-8"));
-      sb.append("/" + URLEncoder.encode(property));
+      sb.append("/" + URLEncoder.encode(ip, "UTF-8"));
+      sb.append("/" + status);
+      sb.append("/" + URLEncoder.encode(hostname, "UTF-8"));
+      sb.append("/" + URLEncoder.encode(os, "UTF-8"));
       sb.append("/" + guestFlag);
-      sb.append("/" + URLEncoder.encode(hashedUsername));
+      sb.append("/" + URLEncoder.encode(generateHash(username), "UTF-8"));
 
       // open the connection
       URL url = new URL(sb.toString());
@@ -125,9 +133,8 @@ public class ClientTracking {
       // wr.close();
       rd.close();
     } catch (Exception e) {
-      log.error("Error in transmission:", e);
+      log.error("Error in ClientTracking", e);
     }
 
   }
-
 }
