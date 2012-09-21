@@ -15,6 +15,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.apache.log4j.varia.NullAppender;
 
 import sun.misc.BASE64Encoder;
 
@@ -44,8 +45,7 @@ public class ClientTracking {
   public static void main(String[] args) throws MalformedURLException,
       IOException {
 
-    String serviceUrl = "http://localhost:8080/wstrack-server/track";
-
+    // configure logging
     boolean debug = System.getProperty("wstrack.debug", "false").equals("true");
 
     if (debug) {
@@ -54,7 +54,27 @@ public class ClientTracking {
           "%d [%-5p]: (%c)%n%m%n%n"));
       Logger.getRootLogger().addAppender(console);
       Logger.getRootLogger().setLevel(Level.DEBUG);
+    } else {
+      Logger.getRootLogger().addAppender(new NullAppender());
     }
+
+    // map environment to baseUrl
+    String env = System.getProperty("wstrack.env", "local");
+    String baseUrl = null;
+
+    if (env.equals("prod")) {
+      baseUrl = "http://www.lib.umd.edu/wstrack/track";
+
+    } else if (env.equals("stage")) {
+      baseUrl = "http://wwwstage.lib.umd.edu/wstrack/track";
+
+    } else if (env.equals("dev")) {
+      baseUrl = "http://wwwdev.lib.umd.edu/wstrack/track";
+
+    } else {
+      baseUrl = "http://localhost:8080/wstrack-server/track";
+    }
+    log.debug("base url: " + baseUrl);
 
     String username = "user.name";
     String usernameProperty = System.getProperty(username);
@@ -83,7 +103,7 @@ public class ClientTracking {
     try {
 
       // build tracking url
-      StringBuffer sb = new StringBuffer(serviceUrl);
+      StringBuffer sb = new StringBuffer(baseUrl);
       sb.append("/" + URLEncoder.encode("1.1.1.1"));
       sb.append("/" + "login");
       sb.append("/" + URLEncoder.encode(hostAddress, "UTF-8"));
