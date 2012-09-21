@@ -11,15 +11,17 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Appender;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 import sun.misc.BASE64Encoder;
 
 public class ClientTracking {
 
-  public static final Logger log = LoggerFactory
-      .getLogger(ClientTracking.class);
+  public static final Logger log = Logger.getLogger(ClientTracking.class);
 
   /**
    * @param args
@@ -43,8 +45,15 @@ public class ClientTracking {
   public static void main(String[] args) throws MalformedURLException,
       IOException {
 
+    // debug logging to the console
+    Appender console = new ConsoleAppender(new PatternLayout(
+        "%d [%-5p]: (%c)%n%m%n%n"));
+    Logger.getRootLogger().addAppender(console);
+    Logger.getRootLogger().setLevel(Level.DEBUG);
+
     String username = "user.name";
     String usernameProperty = System.getProperty(username);
+    log.debug("username: " + usernameProperty);
 
     String nameOS = "os.name";
     String property = System.getProperty(nameOS);
