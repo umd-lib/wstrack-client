@@ -29,7 +29,7 @@ public class ClientTracking {
   public static String generateHash(String input) {
     String hash = "";
     try {
-      MessageDigest sha = MessageDigest.getInstance("SHA-1");
+      MessageDigest sha = MessageDigest.getInstance("MD5");
       byte[] hashedBytes = sha.digest(input.getBytes());
       hash = (new BASE64Encoder().encode(hashedBytes));
     } catch (Exception e) {
