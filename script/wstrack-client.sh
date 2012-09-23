@@ -19,7 +19,7 @@ fi
 # debug (optional) - display debugging information
 DEBUG="false"
 if [ -n "$3" ]; then
-  DEBUG="true"
+  DEBUG="$3"
 fi
 
 # gather information about this host
