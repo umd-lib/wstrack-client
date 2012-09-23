@@ -94,13 +94,13 @@ public class ClientTracking {
       if (status == null) {
         throw new Exception("wstrack.status property is required");
       }
-      log.debug("status: " + username);
+      log.debug("status: " + status);
 
       String ip = System.getProperty("wstrack.ip");
       if (ip == null) {
         throw new Exception("wstrack.ip property is required");
       }
-      log.debug("username: " + ip);
+      log.debug("ip: " + ip);
 
       String os = System.getProperty("wstrack.os");
       if (os == null) {
