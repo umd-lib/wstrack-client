@@ -64,13 +64,13 @@ public class ClientTracking {
       String baseUrl = null;
 
       if (env.equals("prod")) {
-        baseUrl = "http://www.lib.umd.edu/wstrack/track";
+        baseUrl = "https://www.lib.umd.edu/wstrack/track";
 
       } else if (env.equals("stage")) {
-        baseUrl = "http://wwwstage.lib.umd.edu/wstrack/track";
+        baseUrl = "https://wwwstage.lib.umd.edu/wstrack/track";
 
       } else if (env.equals("dev")) {
-        baseUrl = "http://wwwdev.lib.umd.edu/wstrack/track";
+        baseUrl = "https://wwwdev.lib.umd.edu/wstrack/track";
 
       } else {
         baseUrl = "http://localhost:8080/wstrack-server/track";
