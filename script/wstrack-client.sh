@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# get directory of this script
+DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # command line argument 1
 # status (required) - login or logout
 STATUS="$1"
@@ -37,4 +40,4 @@ java \
   -Dwstrack.hostname="$HOSTNAME" \
   -Dwstrack.username="$USER" \
   -Dwstrack.os="$OSNAME $OSVER" \
-  -jar ./wstrack-client.jar
+  -jar "$DIR"/wstrack-client.jar
