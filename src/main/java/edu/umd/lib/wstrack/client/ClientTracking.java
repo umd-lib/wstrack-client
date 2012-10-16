@@ -26,17 +26,17 @@ public class ClientTracking {
    * @param args
    */
 
-  public static String generateHash(String input) {
-    String hash = "";
-    try {
-      MessageDigest sha = MessageDigest.getInstance("MD5");
-      byte[] hashedBytes = sha.digest(input.getBytes());
-      hash = (new BASE64Encoder().encode(hashedBytes));
-    } catch (Exception e) {
-      log.debug("The exception is " + e);
-    }
-    return hash;
-  }
+  //public static String generateHash(String input) {
+//    String hash = "";
+//    try {
+//      MessageDigest sha = MessageDigest.getInstance("MD5");
+//      byte[] hashedBytes = sha.digest(input.getBytes());
+//      hash = (new BASE64Encoder().encode(hashedBytes));
+//    } catch (Exception e) {
+//      log.debug("The exception is " + e);
+//    }
+//    return hash;
+//  }
 
   /*
    * @Javadoc - Main method to retrieve the workstation tracking details.
@@ -84,23 +84,17 @@ public class ClientTracking {
       }
       log.debug("username: " + username);
 
-      String hostname = System.getProperty("wstrack.hostname");
-      if (hostname == null) {
-        throw new Exception("wstrack.hostname property is required");
+      String computerName = System.getProperty("wstrack.computerName");
+      if (computerName == null) {
+        throw new Exception("wstrack.computerName property is required");
       }
-      log.debug("hostname: " + hostname);
+      log.debug("computerName: " + computerName);
 
       String status = System.getProperty("wstrack.status");
       if (status == null) {
         throw new Exception("wstrack.status property is required");
       }
       log.debug("status: " + status);
-
-      String ip = System.getProperty("wstrack.ip");
-      if (ip == null) {
-        throw new Exception("wstrack.ip property is required");
-      }
-      log.debug("ip: " + ip);
 
       String os = System.getProperty("wstrack.os");
       if (os == null) {
@@ -112,12 +106,11 @@ public class ClientTracking {
 
       // build tracking url
       StringBuffer sb = new StringBuffer(baseUrl);
-      sb.append("/" + URLEncoder.encode(ip, "UTF-8"));
       sb.append("/" + status);
-      sb.append("/" + URLEncoder.encode(hostname, "UTF-8"));
+      sb.append("/" + URLEncoder.encode(computerName, "UTF-8"));
       sb.append("/" + URLEncoder.encode(os, "UTF-8"));
       sb.append("/" + guestFlag);
-      sb.append("/" + URLEncoder.encode(generateHash(username), "UTF-8"));
+      sb.append("/" + URLEncoder.encode(username), "UTF-8"));
 
       // open the connection
       URL url = new URL(sb.toString());
