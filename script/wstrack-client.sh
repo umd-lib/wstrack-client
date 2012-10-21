@@ -26,8 +26,7 @@ if [ -n "$3" ]; then
 fi
 
 # gather information about this host
-IP=$(/sbin/ifconfig | /usr/bin/grep 'inet ' | /usr/bin/grep -v 127\.0\.0\.1 | /usr/bin/cut -d' ' -f2)
-
+COMPUTERNAME=$(/usr/sbin/scutil --get ComputerName)
 OSNAME=$(/usr/bin/sw_vers -productName)
 OSVER=$(/usr/bin/sw_vers -productVersion)
 
@@ -35,9 +34,8 @@ OSVER=$(/usr/bin/sw_vers -productVersion)
 java \
   -Dwstrack.debug="$DEBUG" \
   -Dwstrack.env="$ENVIRONMENT" \
-  -Dwstrack.ip="$IP" \
+  -Dwstrack.computerName="$COMPUTERNAME" \
   -Dwstrack.status="$STATUS" \
-  -Dwstrack.hostname="$HOSTNAME" \
   -Dwstrack.username="$USER" \
   -Dwstrack.os="$OSNAME $OSVER" \
   -jar "$DIR"/wstrack-client.jar

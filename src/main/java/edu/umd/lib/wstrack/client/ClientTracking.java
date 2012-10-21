@@ -7,7 +7,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
@@ -16,8 +15,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.varia.NullAppender;
 
-import sun.misc.BASE64Encoder;
-
 public class ClientTracking {
 
   public static final Logger log = Logger.getLogger(ClientTracking.class);
@@ -25,18 +22,6 @@ public class ClientTracking {
   /**
    * @param args
    */
-
-  //public static String generateHash(String input) {
-//    String hash = "";
-//    try {
-//      MessageDigest sha = MessageDigest.getInstance("MD5");
-//      byte[] hashedBytes = sha.digest(input.getBytes());
-//      hash = (new BASE64Encoder().encode(hashedBytes));
-//    } catch (Exception e) {
-//      log.debug("The exception is " + e);
-//    }
-//    return hash;
-//  }
 
   /*
    * @Javadoc - Main method to retrieve the workstation tracking details.
@@ -102,15 +87,12 @@ public class ClientTracking {
       }
       log.debug("os: " + os);
 
-      boolean guestFlag = username.startsWith("libguest");
-
       // build tracking url
       StringBuffer sb = new StringBuffer(baseUrl);
-      sb.append("/" + status);
       sb.append("/" + URLEncoder.encode(computerName, "UTF-8"));
+      sb.append("/" + status);
       sb.append("/" + URLEncoder.encode(os, "UTF-8"));
-      sb.append("/" + guestFlag);
-      sb.append("/" + URLEncoder.encode(username), "UTF-8"));
+      sb.append("/" + URLEncoder.encode(username, "UTF-8"));
 
       // open the connection
       URL url = new URL(sb.toString());
